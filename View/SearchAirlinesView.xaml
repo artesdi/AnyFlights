@@ -1,0 +1,80 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="AnyFlights.View.SearchAirlinesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:AnyFlights.ViewModel;assembly=AnyFlights.ViewModel"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    d:DataContext="{d:DesignInstance viewModel:SearchAirlinesViewModel}">
+
+    <Grid Background="Transparent">
+        <toolkit:PerformanceProgressBar
+            IsIndeterminate="true"
+            Foreground="{StaticResource PhoneAccentBrush}"
+            Height="150"
+            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+            Margin="0" />
+
+        <controls:Pivot
+            Grid.Row="1"
+            Margin="16,0,16,0"
+            ItemsSource="{Binding AirlinesCollection}"
+            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+            <controls:Pivot.TitleTemplate>
+                <DataTemplate>
+                    <TextBlock Text="Авиалинии"
+                               Style="{StaticResource PhoneTextTitle1Style}" />
+                </DataTemplate>
+            </controls:Pivot.TitleTemplate>
+            <controls:Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="{Binding Name}"
+                                   Style="{StaticResource PhoneTextTitle2Style}" />
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding HasTrips, Converter={StaticResource TripsCountToTitleConverter}}"
+                                   Style="{StaticResource PhoneTextTitle3Style}"
+                                   Margin="0,16,0,0"/>
+                    </Grid>
+                </DataTemplate>
+            </controls:Pivot.HeaderTemplate>
+            <controls:Pivot.ItemTemplate>
+                <DataTemplate>
+                    <ScrollViewer>
+                        <ItemsControl
+                            ItemsSource="{Binding Fares}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,20,0,20">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Style="{StaticResource PhoneTextLargeStyle}"
+                                                   Text="{Binding TotalAmount, StringFormat='\{0\} р.'}" />
+                                        <TextBlock Grid.Column="1" Style="{StaticResource PhoneTextLargeStyle}"
+                                                   Text="{Binding SegmentsCount, StringFormat='вылетов: {0}'}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DataTemplate>
+            </controls:Pivot.ItemTemplate>
+        </controls:Pivot>
+    </Grid>
+</phone:PhoneApplicationPage>
