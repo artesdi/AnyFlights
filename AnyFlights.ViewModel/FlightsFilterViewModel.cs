@@ -97,6 +97,7 @@ namespace AnyFlights.ViewModel
 
             _departureDate = DateTime.Now;
             _departureCode = "MOW";
+            _arrivalCode = "LON";
             _fullPassengersCount = 1;
             _serviceClass = "E";
         }
