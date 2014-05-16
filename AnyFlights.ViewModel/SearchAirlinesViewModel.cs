@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using AnyFlights.Model;
@@ -24,14 +25,15 @@ namespace AnyFlights.ViewModel
             get { return _airlinesInternalCollection; }
         }
 
-        public ReadOnlyObservableCollection<AirlineEntity> AirlinesCollection
+        public IEnumerable<AirlineEntity> AirlinesCollection
         {
             get { return _airlinesCollection; }
         }
 
-        public SearchAirlinesViewModel(IAsyncServiceExecutor serviceExecutor,
-                                       INavigator navigator,
-                                       FlightsFilter filter)
+        public SearchAirlinesViewModel(
+            IAsyncServiceExecutor serviceExecutor,
+            INavigator navigator,
+            FlightsFilter filter)
         {
             if (serviceExecutor == null) throw new ArgumentNullException("serviceExecutor");
             if (navigator == null) throw new ArgumentNullException("navigator");
@@ -55,6 +57,7 @@ namespace AnyFlights.ViewModel
         private async void LoadAirlines()
         {
             IsBusy = true;
+
             try
             {
                 AirlinesInternalCollection.Clear();
@@ -77,14 +80,28 @@ namespace AnyFlights.ViewModel
             }
         }
 
-        private static AirlineEntity CastAirlineModel(Airline fare)
+        private AirlineEntity CastAirlineModel(Airline fare)
         {
-            return new AirlineEntity(fare.Name,
-                                     fare.FaresFull.Select(fareFull => new FaresFullEntity(fareFull.TotalAmount,
-                                                                                           fareFull.Directions.First().Segments.Count))
-                                         .ToList()
-                                         .AsReadOnly(),
-                                     fare.FaresFull.First().Directions.First().Segments.First().Trips.Count > 1);
+            var faresFull = fare.FaresFull
+                .Select(CreateFaresFullEntity)
+                .ToList()
+                .AsReadOnly();
+
+            var firstFare = fare.FaresFull.First();
+            var firstDirection = firstFare.Directions.First();
+            var firstSegment = firstDirection.Segments.First();
+            var fareIsHasTrips = firstSegment.Trips.Count > 1;
+
+            return new AirlineEntity(fare.Name, faresFull, fareIsHasTrips);
+        }
+
+        private FaresFullEntity CreateFaresFullEntity(FaresFull fareFull)
+        {
+            var firstDirection = fareFull.Directions.First();
+
+            return new FaresFullEntity(
+                fareFull.TotalAmount,
+                firstDirection.Segments.Count);
         }
     }
 }

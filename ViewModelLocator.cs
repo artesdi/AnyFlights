@@ -1,29 +1,29 @@
 using AnyFlights.IoC;
-using AnyFlights.Networking;
 using AnyFlights.ViewModel;
 using AnyFlights.ViewModel.Components;
 using AnyFlights.ViewModel.Data;
-using AnyFlights.ViewModel.RestCalls;
 using Funq;
 
 namespace AnyFlights
 {
     public class ViewModelLocator
     {
-        private static Container Cont
+        private static Container Container
         {
             get { return ContainerInstance.Current; }
         }
 
         public static ViewModelBase GetFlightsFilterViewModel()
         {
-            return new FlightsFilterViewModel(Cont.Resolve<INavigator>());
+            return new FlightsFilterViewModel(Container.Resolve<INavigator>());
         }
+
         public static ViewModelBase GetSearchAirlinesViewModel(FlightsFilter filter)
         {
-            return new SearchAirlinesViewModel(new AsyncServiceExecutor(new RestCallsFactory(new WebService())),
-                                              Cont.Resolve<INavigator>(),
-                                              filter);
+            return new SearchAirlinesViewModel(
+                Container.Resolve<IAsyncServiceExecutor>(),
+                Container.Resolve<INavigator>(),
+                filter);
         }
     }
 }

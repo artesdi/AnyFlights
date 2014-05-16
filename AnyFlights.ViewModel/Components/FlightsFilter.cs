@@ -13,12 +13,13 @@ namespace AnyFlights.ViewModel.Components
         public int ChildPassengersCount { get; private set; }
         public string ServiceClass { get; private set; }
 
-        public FlightsFilter(DateTime departureDate,
-                             string departureCode,
-                             string arrivalCode,
-                             int fullPassengersCount,
-                             int childPassengersCount,
-                             string serviceClass)
+        public FlightsFilter(
+            DateTime departureDate,
+            string departureCode,
+            string arrivalCode,
+            int fullPassengersCount,
+            int childPassengersCount,
+            string serviceClass)
         {
             DepartureDate = departureDate;
             DepartureCode = departureCode;

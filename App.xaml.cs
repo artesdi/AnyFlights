@@ -38,7 +38,7 @@ namespace AnyFlights
             InitializePhoneApplication();
             
             RootFrame.UriMapper = (UriMapper)Resources["ApplicationUriMapper"];
-            Bootstrapper.InitApplication(RootFrame);
+            Bootstrapper.InitializeApplication(RootFrame);
 
             // Show graphics profiling information while debugging.
             if (System.Diagnostics.Debugger.IsAttached)

@@ -12,7 +12,7 @@ namespace AnyFlights.Networking
         {
             if (!usingNetworkStackCache)
             {
-                UniqableQuery(ref url);
+                MakeQueryUnique(ref url);
             }
 
             using (var handler = new HttpClientHandler())
@@ -21,14 +21,13 @@ namespace AnyFlights.Networking
                 {
                     httpClient.Timeout = timeout;
                    
-                    var request = new HttpRequestMessage(HttpMethod.Get, url);                    
+                    var request = new HttpRequestMessage(HttpMethod.Get, url);
                     if (handler.SupportsTransferEncodingChunked())
                     {
                         request.Headers.TransferEncodingChunked = true;
                     }
 
-                    HttpResponseMessage response = await httpClient.SendAsync(request);
-
+                    var response = await httpClient.SendAsync(request);
                     var stringResponse = await response.Content.ReadAsStringAsync();
 
                     return _deserializer.Deserialize<T>(stringResponse);
@@ -36,7 +35,7 @@ namespace AnyFlights.Networking
             }
         }
 
-        private void UniqableQuery(ref string ulr)
+        private void MakeQueryUnique(ref string ulr)
         {
             ulr += string.Format("&QueryGuid={0}", Guid.NewGuid());
         }

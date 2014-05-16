@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Input;
-using AnyFlights.ViewModel.Utils;
 
 namespace AnyFlights.ViewModel.Commands
 {

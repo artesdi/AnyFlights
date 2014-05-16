@@ -6,8 +6,6 @@ namespace AnyFlights.ViewModel.Processes
     {
         public СommunicationException(string errorMessage) 
             : base(errorMessage)
-        {
-            
-        }
+        { }
     }
 }

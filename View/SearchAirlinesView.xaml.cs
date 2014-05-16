@@ -16,7 +16,8 @@ namespace AnyFlights.View
             base.OnNavigatedTo(e);
             if (e.NavigationMode != NavigationMode.Back)
             {
-                DataContext = ViewModelLocator.GetSearchAirlinesViewModel(new FlightsFilter(NavigationContext.QueryString));
+                DataContext = ViewModelLocator.GetSearchAirlinesViewModel(
+                    new FlightsFilter(NavigationContext.QueryString));
             }
         }
     }

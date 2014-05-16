@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using AnyFlights.ViewModel.Utils;
+using System.Windows;
 
 namespace AnyFlights.ViewModel
 {
@@ -13,7 +13,7 @@ namespace AnyFlights.ViewModel
             var handler = PropertyChanged;
             if (handler != null)
             {
-                SmartDispatcher.BeginInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
+                Deployment.Current.Dispatcher.BeginInvoke(() => handler(this, new PropertyChangedEventArgs(propertyName)));
             }
         }
 
@@ -25,7 +25,8 @@ namespace AnyFlights.ViewModel
             }
             protected set
             {
-                if (value.Equals(_isBusy)) return;
+                if (_isBusy) return;
+
                 _isBusy = value;
                 OnPropertyChanged("IsBusy");
             }

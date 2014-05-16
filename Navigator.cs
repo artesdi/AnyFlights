@@ -22,20 +22,20 @@ namespace AnyFlights
         {
             if (pageName == null) throw new ArgumentNullException("pageName");
 
-            var sb = new StringBuilder();
-            sb.Append(pageName);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(pageName);
             if (parameters != null)
             {
-                sb.Append("?");
+                stringBuilder.Append("?");
                 foreach (var navigationParameter in parameters)
                 {
-                    sb.Append(navigationParameter.Parameter);
-                    sb.Append("=");
-                    sb.Append(Uri.EscapeDataString(navigationParameter.Value));
-                    sb.Append("&");
+                    stringBuilder.Append(navigationParameter.Parameter);
+                    stringBuilder.Append("=");
+                    stringBuilder.Append(Uri.EscapeDataString(navigationParameter.Value));
+                    stringBuilder.Append("&");
                 }
             }
-            _rootFrame.Navigate(new Uri(sb.ToString(), UriKind.Relative));
+            _rootFrame.Navigate(new Uri(stringBuilder.ToString(), UriKind.Relative));
         }
 
         public void CleanNavigationStack()

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace AnyFlights.Model
+﻿namespace AnyFlights.Model
 {
     public class FaresSearchState
     {

@@ -1,29 +1,48 @@
 ﻿using System;
-using System.Windows.Navigation;
 using AnyFlights.IoC;
 using AnyFlights.Networking;
 using AnyFlights.ViewModel;
+using AnyFlights.ViewModel.Data;
 using AnyFlights.ViewModel.RestCalls;
-using AnyFlights.ViewModel.Utils;
+using Funq;
 using Microsoft.Phone.Controls;
 
 namespace AnyFlights
 {
     public class Bootstrapper
     {
-        public static void InitApplication(PhoneApplicationFrame rootFrame)
+        public static void InitializeApplication(PhoneApplicationFrame rootFrame)
         {
             if (rootFrame == null) throw new ArgumentNullException("rootFrame");
 
-            SmartDispatcher.Initialize();
-            RegisterDependencies(rootFrame);
+            var container = ContainerInstance.Current;
+
+            RegisterNavigationService(container, rootFrame);
+            RegisterWebService(container);
+            RegisterFactories(container);
+            RegisterAsyncExecutor(container);
         }
 
-
-        private static void RegisterDependencies(PhoneApplicationFrame rootFrame)
+        private static void RegisterNavigationService(Container container, PhoneApplicationFrame rootFrame)
         {
-            var ioc = ContainerInstance.Current;
-            ioc.Register<INavigator>(new Navigator(rootFrame));
-        } 
+            container.Register<INavigator>(new Navigator(rootFrame));
+        }
+
+        private static void RegisterWebService(Container container)
+        {
+            container.Register<IWebService>(new WebService());
+        }
+
+        private static void RegisterFactories(Container container)
+        {
+            container.Register<IRestCallsFactory>(
+                new RestCallsFactory(container.Resolve<IWebService>()));
+        }
+
+        private static void RegisterAsyncExecutor(Container container)
+        {
+            container.Register<IAsyncServiceExecutor>(
+                new AsyncServiceExecutor(container.Resolve<IRestCallsFactory>()));
+        }
     }
 }
